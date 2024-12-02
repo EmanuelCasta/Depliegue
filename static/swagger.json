@@ -1,0 +1,83 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "CatBoost Prediction API",
+      "description": "API para realizar predicciones usando un modelo CatBoost"
+    },
+    "host": "127.0.0.1:5000",
+    "basePath": "/",
+    "schemes": ["http"],
+    "paths": {
+      "/predict": {
+        "post": {
+          "summary": "Realizar una predicción",
+          "description": "Recibe un JSON con las características necesarias para realizar una predicción.",
+          "consumes": ["application/json"],
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "JSON con las características",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "h_std": {"type": "number"},
+                  "h_sum": {"type": "number"},
+                  "t_std": {"type": "number"},
+                  "t_sum": {"type": "number"},
+                  "pr_promedio": {"type": "number"},
+                  "pr_std": {"type": "number"},
+                  "pr_sum": {"type": "number"},
+                  "vv_sum": {"type": "number"},
+                  "p_sum": {"type": "number"}
+                },
+                "required": ["h_std", "h_sum", "t_std", "t_sum", "pr_promedio", "pr_std", "pr_sum", "vv_sum", "p_sum"],
+                "example": {
+                  "h_std": 1.2,
+                  "h_sum": 15.5,
+                  "t_std": 2.1,
+                  "t_sum": 12.8,
+                  "pr_promedio": 0.7,
+                  "pr_std": 0.2,
+                  "pr_sum": 3.5,
+                  "vv_sum": 8.4,
+                  "p_sum": 1005.6
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Resultado de la predicción",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prediction": {"type": "integer"},
+                  "probability": {"type": "array", "items": {"type": "number"}}
+                }
+              }
+            },
+            "400": {"description": "Error en los datos enviados"},
+            "401": {"description": "Acceso no autorizado"}
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      }
+    },
+    "securityDefinitions": {
+      "Bearer": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Añade el token con formato: Bearer <clave>"
+      }
+    }
+  }
+  
